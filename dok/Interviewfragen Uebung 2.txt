@@ -1,0 +1,22 @@
+Interviewfragen
+----------------
+1. Muss das Projekt in mehrere Sprachen übersetzt werden können?
+
+Begründung: Das übersetzen von Applikationen in andere Sprachen muss von Anfang an beobachtet werden.
+Falls die Applikation übersetzt werden muss, sollte ein Framework dazu schon von Anfang an verwendet werden.
+Das Design ist von verschiedenen Sprachen abhängig (Orientation, Länge des Textes).
+
+2. Soll ein API (generelle Schnittstelle für Applikationen) unterstützt werden?
+
+Begründung: Es ist wichtig zu wissen, ob die zu implementierende Applikation in einer Schichtenstruktur Daten akzeptiert,
+also auf einem eingenen API aufbauen muss oder ob der Kunde darauf keinen Wert setzt. Die erste Variante bedeutet erheblichen 
+Mehraufwand (auch in der API Dokumentation), ermöglicht dem Kunden aber das Einbinden von weiteren Applikationen und Geräten.
+
+3. Wo wird diese Applikation gehostet?
+
+Begründung: Es sollte vor der Umsetzung des Backends über die Servertechnologie diskutiert werden. Wird bei einem grossen Anbieter
+gehostet (Google, Amazon) muss das Backend unter umständen daran angepasst werden.
+
+4. Unter welcher Marke wird das Produkt veröffentlicht? Gibt es dazu spezielle Vorgaben?
+
+Begründung: Der Kunde wünscht unter umständen, das Produkt einem Brand zuzuordnen. Dann müssen spezielle Farben / Formen / Formate zum Zug kommen.
