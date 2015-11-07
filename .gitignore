@@ -22,3 +22,11 @@ frontend/.gradle/*
 frontend/.classpath
 frontend/.settings*
 frontend/.project
+
+
+
+#backend
+backend/.gradle
+backend/.classpath
+backend/.project
+backend/.settings*

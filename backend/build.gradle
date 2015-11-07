@@ -1,0 +1,49 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'war'
+apply plugin: 'jetty'
+
+
+
+//our repositories
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    def jerseyVersion = '2.22.1';
+    def jaxWSVersion ='2.0.1';
+
+    compile "javax.ws.rs:javax.ws.rs-api:$jaxWSVersion"
+    
+    compile "org.glassfish.jersey.containers:jersey-container-servlet:$jerseyVersion"
+    
+    compile "org.glassfish.jersey.media:jersey-media-multipart:$jerseyVersion"
+    
+    compile "org.glassfish.jersey.core:jersey-server:$jerseyVersion"
+    compile "org.glassfish.jersey.core:jersey-client:$jerseyVersion"       
+    
+    //file upload
+    compile "commons-io:commons-io:2.2"
+    
+    compile "org.mongodb:mongo-java-driver:3.0.4"
+    
+    testCompile 'junit:junit:4.12'
+}
+
+
+
+//configure eclipse task
+eclipse {
+
+    jdt {
+        //eclipse compatibilities
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    classpath {
+        //TODO: evt später anpassen
+        //defaultOutputDir = file('build-eclipse')
+    }
+}
