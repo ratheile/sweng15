@@ -96,7 +96,10 @@ public class Movie implements Serializable {
 				+ genre + ", language=" + language + "]";
 	}
 	
-	
+	/**
+	 * Returns a BSON document representation of this movie
+	 * @return the BSON document, careful, returns a new instance everytimes!
+	 */
 	public Document getNewBSONRepresentation(){
 		Document document = new Document("title", this.getTitle())
 	               .append("language", this.getLanguage())
@@ -108,7 +111,11 @@ public class Movie implements Serializable {
 		return document;
 	}
 	
-	
+	/**
+	 * Compares this movie to a BSON representation
+	 * @param bson the BSON representation to be compared to
+	 * @return status if the BSON representation is representing this movie
+	 */
 	public boolean compareTo(Document bson){
 		if(!bson.getString("title").equals(this.getTitle()))return false;	
 		if(!bson.getString("language").equals(this.getLanguage()))return false;	
