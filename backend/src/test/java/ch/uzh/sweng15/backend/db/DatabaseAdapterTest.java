@@ -3,6 +3,8 @@
  */
 package ch.uzh.sweng15.backend.db;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +13,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.uzh.sweng15.backend.temp.Movie;
+import ch.uzh.sweng15.backend.pojo.Movie;
 
 /**
- * @author shafall
+ * Thest of  all database second lvl api functions
+ * @author Raffael Theiler
  *
  */
 public class DatabaseAdapterTest {
@@ -33,6 +36,10 @@ public class DatabaseAdapterTest {
 		adapter.deleteDatabase();
 	}
 
+	/*
+	 * test a simple insert into an empty database,
+	 * then read back the result and compare it to the expected value
+	 */
 	@Test
 	public void testSimpleInsertAndRetrieve() {
 		ArrayList<String> genres = new ArrayList<>();
@@ -41,7 +48,7 @@ public class DatabaseAdapterTest {
 		List<Document> allMoviesAsJSON = adapter.getAllMoviesAsBSON();
 		Document first = allMoviesAsJSON.get(0);
 		boolean compare = movie.compareTo(first);
-		assert(compare);
+		assertEquals(true,compare);
 	}
 
 }

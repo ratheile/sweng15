@@ -1,10 +1,17 @@
-package ch.uzh.sweng15.backend.temp;
+package ch.uzh.sweng15.backend.pojo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.bson.Document;
 
+/**
+ * Simple wrapper class for a movie
+ * Allows to convert the movie into its different representations
+ * (JSON, BSON) 
+ * @author Raffael Theiler
+ *
+ */
 public class Movie implements Serializable {
 	
 	private static final long serialVersionUID = -5171017094923715593L;
