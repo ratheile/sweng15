@@ -34,18 +34,27 @@ public class MovieTest {
 	 */
 	@Test
 	public void testCompareTo(){
-		ArrayList<String> genres = new ArrayList<>();
-		ArrayList<String> alteredGenres = new ArrayList<>();
-		alteredGenres.addAll(Arrays.asList("test1"));
-		genres.addAll(Arrays.asList("test1", "test2", "test3"));
+		ArrayList<String> list = new ArrayList<>();
+		ArrayList<String> alteredList = new ArrayList<>();
+		ArrayList<String> alteredList2 = new ArrayList<>();
 		
-		Movie movie = new Movie("testmovie", 1922, 1000, "testcountry", genres, "testlang");
-		Movie movie_alteredTitle = new Movie("t3stmovie", 1922, 1000, "testcountry", genres, "testlang");
-		Movie movie_alteredYear = new Movie("testmovie", 1923, 1000, "testcountry", genres, "testlang");
-		Movie movie_alteredLength = new Movie("testmovie", 1922, 1001, "testcountry", genres, "testlang");
-		Movie movie_alteredCountry = new Movie("testmovie", 1922, 1000, "t3stcountry", genres, "testlang");
-		Movie movie_alteredGenre = new Movie("testmovie", 1922, 1000, "testcountry", alteredGenres, "testlang");
-		Movie movie_alteredLang = new Movie("testmovie", 1922, 1000, "testcountry", genres, "t3stlang");
+		alteredList.addAll(Arrays.asList("test1"));
+		
+		alteredList2.addAll(Arrays.asList("test2"));
+		list.addAll(Arrays.asList("test1", "test2", "test3"));
+		
+		Movie movie = new Movie("testmovie", 1922, 1000, list, list, list);
+		
+		//alter each column and test if change is detected
+		Movie movie_alteredTitle = new Movie("t3stmovie", 1922, 1000, list, list, list);
+		Movie movie_alteredYear = new Movie("testmovie", 1923, 1000, list, list, list);
+		Movie movie_alteredLength = new Movie("testmovie", 1922, 1001, list, list, list);
+		
+		Movie movie_alteredCountry = new Movie("testmovie", 1922, 1000, alteredList, list, list);
+		Movie movie_alteredGenre = new Movie("testmovie", 1922, 1000, list, alteredList,list);
+		Movie movie_alteredLang = new Movie("testmovie", 1922, 1000, list, list, alteredList);
+		
+		Movie movie_alteredListAttrib = new Movie("testmovie", 1922, 1000, alteredList2, list, list);
 		
 		assertEquals(true, movie.compareTo(movie.getNewBSONRepresentation()));
 		assertEquals(false, movie.compareTo(movie_alteredTitle.getNewBSONRepresentation()));
@@ -54,6 +63,10 @@ public class MovieTest {
 		assertEquals(false,movie.compareTo(movie_alteredCountry.getNewBSONRepresentation()));
 		assertEquals(false,movie.compareTo(movie_alteredGenre.getNewBSONRepresentation()));
 		assertEquals(false,movie.compareTo(movie_alteredLang.getNewBSONRepresentation()));
+		assertEquals(false,movie.compareTo(movie_alteredLang.getNewBSONRepresentation()));
+		
+		
+		assertEquals(false,movie.compareTo(movie_alteredListAttrib.getNewBSONRepresentation()));
 	}
 	
 	/*
@@ -61,9 +74,9 @@ public class MovieTest {
 	 */
 	@Test
 	public void testGetNewBSONRepresentation() {
-		ArrayList<String> genres = new ArrayList<>();
-		genres.addAll(Arrays.asList("test1", "test2", "test3"));
-		Movie movie = new Movie("testmovie", 1922, 1000, "testcountry", genres, "testlang");
+		ArrayList<String> list = new ArrayList<>();
+		list.addAll(Arrays.asList("test1", "test2", "test3"));
+		Movie movie = new Movie("testmovie", 1922, 1000, list, list,list);
 		//this test depends on the correctness of the compare test
 		boolean compare = movie.compareTo(movie.getNewBSONRepresentation());
 		assertEquals(true,compare);

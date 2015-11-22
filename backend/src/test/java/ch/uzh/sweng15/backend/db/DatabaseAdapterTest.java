@@ -26,7 +26,7 @@ public class DatabaseAdapterTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		adapter = new DatabaseAdapter("localhost", 27017, "test");
+		adapter = new DatabaseAdapter("mongodb://test:test@ds057204.mongolab.com:57204/sweng15");
 		adapter.deleteDatabase();
 		adapter.setupEmptyDatabase();
 	}
@@ -42,8 +42,12 @@ public class DatabaseAdapterTest {
 	 */
 	@Test
 	public void testSimpleInsertAndRetrieve() {
+		ArrayList<String> country = new ArrayList<>();
 		ArrayList<String> genres = new ArrayList<>();
-		Movie movie = new Movie("testmovie", 1922, 1000, "testcountry", genres, "testlang");
+		ArrayList<String> languages = new ArrayList<>();
+		Movie movie = new Movie("testmovie", 1922, 1000, country, genres, languages);
+		System.out.println(movie.toString());
+		System.out.println(movie.getNewBSONRepresentation().toJson());
 		adapter.insertMovie(movie);
 		List<Document> allMoviesAsJSON = adapter.getAllMoviesAsBSON();
 		Document first = allMoviesAsJSON.get(0);

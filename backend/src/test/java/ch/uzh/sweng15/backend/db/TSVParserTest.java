@@ -21,25 +21,10 @@ public class TSVParserTest {
 			+ " \"/m/0fdjb\": \"Supernatural\", \"/m/02kdv5l\":"
 			+ " \"Action\", \"/m/09zvmj\": \"Space western\"}";
 	
-	private static String testMovieDisplayString = "Title: Ghosts of Mars, Year: 2001, Length: 98 min,"
-			+ " Country: United States of America, Genre: [Thriller],"
-			+ " Language: English Language";
+	private static String testMovieDisplayString = "{ \"title\" : \"Ghosts of Mars\", \"language\" : [\"English\"], \"genre\" : "
+			+ "[\"Thriller\", \"Science Fiction\", \"Horror\", \"Adventure\", \"Supernatural\","
+			+ " \"Action\", \"Space western\"], \"country\" : [\"United States of America\"], \"length\" : 98, \"year\" : 2001 }";
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	/*
 	 * Test if the movie class content is equal to the string
@@ -47,7 +32,7 @@ public class TSVParserTest {
 	@Test
 	public void testParseMovieLine() {
 		Movie parseMovieLine = TSVParser.parseMovieLine(testMovie);
-		assertEquals(testMovieDisplayString, parseMovieLine.getDisplayString());
+		assertEquals(testMovieDisplayString, parseMovieLine.getNewBSONRepresentation().toJson());
 	}
 
 }

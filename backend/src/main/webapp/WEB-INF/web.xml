@@ -7,11 +7,11 @@
 	<display-name>Archetype Created Web Application</display-name>
 
 	<servlet>
-		<servlet-name>MovieVisualizerAPI</servlet-name>
+		<servlet-name>Application</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
-			<param-name>jersey.config.server.provider.packages</param-name>
-			<param-value>ch.uzh.sweng15.backend.servlet</param-value>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>ch.uzh.sweng15.backend.servlet.Application</param-value>
 		</init-param>
 		<init-param>
 			<param-name>jersey.config.server.provider.classnames</param-name>
@@ -21,7 +21,7 @@
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>MovieVisualizerAPI</servlet-name>
+		<servlet-name>Application</servlet-name>
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 

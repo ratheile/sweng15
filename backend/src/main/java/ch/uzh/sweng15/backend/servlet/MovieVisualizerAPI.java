@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
@@ -18,6 +20,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import ch.uzh.sweng15.backend.db.DatabaseAdapter;
 import ch.uzh.sweng15.backend.db.TSVParser;
+import ch.uzh.sweng15.backend.pojo.Filter;
 import ch.uzh.sweng15.backend.pojo.Movie;
 
 
@@ -31,6 +34,7 @@ import ch.uzh.sweng15.backend.pojo.Movie;
 @Path("/")
 public class MovieVisualizerAPI {
 
+	@Inject
 	private DatabaseAdapter adapter;
 
 	/**
@@ -38,8 +42,6 @@ public class MovieVisualizerAPI {
 	 * of the webserver 
 	 */
 	public MovieVisualizerAPI() {
-		// TODO: add this to config;
-		adapter = new DatabaseAdapter("localhost", 27017, "test");
 	}
 
 	/**
@@ -47,7 +49,8 @@ public class MovieVisualizerAPI {
 	 * @return the JSON string
 	 */
 	@GET
-	@Path("/random")
+	@Path("/movie/random")
+	@Produces(MediaType.APPLICATION_JSON)
 	public String getRandomMovie(){
 		return adapter.getRandomMovie();
 	}
@@ -61,6 +64,7 @@ public class MovieVisualizerAPI {
 	@POST 
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA) 
+	@Produces(MediaType.TEXT_PLAIN)
 	public String importDatabase(
 			@FormDataParam("file") InputStream fileInputStream,
 			@FormDataParam("file") FormDataContentDisposition contentDispositionHeader) {
@@ -86,17 +90,31 @@ public class MovieVisualizerAPI {
 				String line = scanner.nextLine();
 				Movie movie = TSVParser.parseMovieLine(line);
 				movies.add(movie);
-				System.out.println(String.format("inserting Movie: %s", movie.toString()));
-				adapter.insertMovie(movie);
+				System.out.println(String.format("Parsing movie: %s", movie.toString()));
 			}
+			
+			System.out.println(String.format("Success, parsed %d movies", movies.size()));
+			System.out.println(String.format("Adding movies to the database"));
+			adapter.bulkInsertMovies(movies);
+			System.out.println(String.format("Done, success"));
+			
 			scanner.close();
 		} catch (IOException e) {
 			//TODO: do not return the error message (security)
 			return e.getMessage();
 		}
 
-		return String.format("success, parsed %d Movies", movies.size());
-
+		return String.format("Success, inserted %d movies", movies.size());
 	}
+	
+	
+	@POST
+	@Path("/movie/filtered")
+	@Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+	public String  postRequestFilteredMovies(Filter filter) {
+		return adapter.getFilteredListOfMovies(filter);
+	}
+	
 
 }

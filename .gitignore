@@ -30,3 +30,4 @@ backend/.gradle
 backend/.classpath
 backend/.project
 backend/.settings*
+backend/build/*

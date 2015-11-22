@@ -20,84 +20,97 @@ public class TSVParser {
 	 */
 	public static Movie parseMovieLine(String strLine) {
 			
-			/*
-			 * File information:
-			 * The file is "row"-separated with '\t'
-			 * We split it into rows and handle each row sequentially
-			 * 
-			 * The current rows are:
-			 * -Title
-			 * -Year
-			 * -Length
-			 * -Language
-			 * -Country
-			 * -Genre
-			 */
+		/*
+		 * File information:
+		 * The file is "row"-separated with '\t'
+		 * We split it into rows and handle each row sequentially
+		 * 
+		 * The current rows are:
+		 * -Title
+		 * -Year
+		 * -Length
+		 * -Language
+		 * -Country
+		 * -Genre
+		 */
 		
-			//TODO: Remove default values
-			String[] row = strLine.split("\t", -1);
-
-			int tmpIndex;
-			
-		
-			String title = row[2];
-			if (title.equals("")) {
-				title = "No Title";
-			}
-
-			String year = row[3];
-			if (year.equals("")) {
-				year = "0";
-			} else {
-				String[] tmpYear = year.split("-");
-				year = tmpYear[0];
-			}
-
-			String length = row[5];
-			if (length.equals("")) {
-				length = "0";
-			} else {
-				length = length.substring(0, length.indexOf("."));
-			}
-			
-			String language = row[6];
-			// Either no information or empty braces
-			if (language.equals("{}") || language.equals("")) {
-				language = "No Language";
-			} else {
-				// Skip past meta tag
-				tmpIndex = language.indexOf(":");
-				language = language.substring(tmpIndex + 3);
-				tmpIndex = language.indexOf("\"");
-				language = language.substring(0, tmpIndex);
-			}
-
-			String country = row[7];
-			if (country.equals("{}") || country.equals("")) {
-				country = "No Country";
-			} else {
-				tmpIndex = country.indexOf(":");
-				country = country.substring(tmpIndex + 3);
-				tmpIndex = country.indexOf("\"");
-				country = country.substring(0, tmpIndex);
-			}
-
-			//TODO: parse all genres, currently only the first is added to the database
-			ArrayList<String> tmpList = new ArrayList<String>();
-			String genre = row[8];
-			if (genre.equals("{}") || genre.equals("")) {
-				genre = "No Genre";
-			} else {
-				tmpIndex = genre.indexOf(":");
-				genre = genre.substring(tmpIndex + 3);
-				tmpIndex = genre.indexOf("\"");
-				genre = genre.substring(0, tmpIndex);
-			}
-			tmpList.add(genre);
-
-			Movie tmpMovie = new Movie(title, Integer.parseInt(year),
-					Integer.parseInt(length), country, tmpList,
-					language);
+        //TODO: Remove default values
+        String[] row = strLine.split("\t", -1);
+        
+        String title = row[2];
+        if (title.equals("")) {
+            title = "No Value";
+        }
+        
+        
+        String year = row[3];
+        if (year.equals("")) {
+            year = "-1";
+        } else {
+            String[] tmpYear = year.split("-");
+            year = tmpYear[0];
+        }
+        
+        
+        String length = row[5];
+        if (length.equals("")) {
+            length = "-1";
+        } else {
+            length = length.substring(0, length.indexOf("."));
+        }
+        
+        int tmpIndex;
+        
+        ArrayList<String> languageList = new ArrayList<String>();
+        String language = row[6];
+        if (language.equals("{}") || language.equals("")) {
+            language = "No Value";
+        } else {
+            while (language.indexOf(":") != -1) {
+                tmpIndex = language.indexOf(":");
+                language = language.substring(tmpIndex + 3);
+                tmpIndex = language.indexOf("\"");
+                String languageToAdd = language.substring(0, tmpIndex);
+                int languageLoc = languageToAdd.indexOf(" Language");
+                if (languageLoc != -1) {
+                    languageToAdd = languageToAdd.substring(0, languageLoc);
+                }
+                languageList.add(languageToAdd);
+                language = language.substring(tmpIndex);
+            }
+        }
+        
+        ArrayList<String> countryList = new ArrayList<String>();
+        String country = row[7];
+        if (country.equals("{}") || country.equals("")) {
+            country = "No Value";
+        } else {
+            while (country.indexOf(":") != -1) {
+                tmpIndex = country.indexOf(":");
+                country = country.substring(tmpIndex + 3);
+                tmpIndex = country.indexOf("\"");
+                String countryToAdd = country.substring(0, tmpIndex);
+                countryList.add(countryToAdd);
+                country = country.substring(tmpIndex);
+            }
+        }
+        
+        ArrayList<String> genreList = new ArrayList<String>();
+        String genre = row[8];
+        if (genre.equals("{}") || genre.equals("")) {
+            genre = "No Value";
+        } else {
+            while (genre.indexOf(":") != -1) {
+                tmpIndex = genre.indexOf(":");
+                genre = genre.substring(tmpIndex + 3);
+                tmpIndex = genre.indexOf("\"");
+                String genreToAdd = genre.substring(0, tmpIndex);
+                genreList.add(genreToAdd);
+                genre = genre.substring(tmpIndex);
+            }
+        }		
+        
+        Movie tmpMovie = new Movie(title, Integer.parseInt(year), Integer.parseInt(length), countryList, genreList, languageList);
 			
 		return tmpMovie;
 	}
