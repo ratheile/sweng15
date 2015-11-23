@@ -169,7 +169,20 @@ public class DatabaseAdapter {
 	 */
 	public String getFilteredListOfMovies(Filter filter){
 		
-		System.out.println(filter);
+		//get the movies
+		MongoCursor<Document> cursor = getFilteredListOfMovieDocuments(filter);
+		
+		//convert to JSON string
+		return cursorToJSON(cursor);
+	}
+
+
+	/**
+	 * Return a filtered set of movies as string, limited to 50 entries
+	 * @param filter the filter applied on the set of movies
+	 * @return The JSON string of the array of movies
+	 */
+	public MongoCursor<Document> getFilteredListOfMovieDocuments(Filter filter) {
 		MongoCollection<Document> collection = database.getCollection(MOVIES_COLLECTION);
 		
 		Document filterAsBson = new Document();
@@ -196,26 +209,34 @@ public class DatabaseAdapter {
 		}
 		
 		MongoCursor<Document> cursor = collection.find(filterAsBson).limit(1000).iterator();
-		
-		StringBuilder sb = new StringBuilder();
-		while(cursor.hasNext()){
-			Document movie = cursor.next();
-			sb.append(movie.toJson());
-			sb.append(",");
-		}
-		
-		return "[" +((sb.length()>0)?sb.substring(0, sb.length() - 1).toString():"") + "]";
+		return cursor;
 	}
 	
 	
 	
-	/**
+	/*
 	 * Centralized database Setup Function
 	 * @param mongoClient The client connection to the database
 	 */
 	private void setupDB(MongoClient mongoClient) {
 		this.mongoClient = mongoClient;
 		this.database = mongoClient.getDatabase(MOVIES_DATABASE);
+	}
+	
+	/*
+	 *Converts the cursor of Documents to json using bson.toJson()
+	 *@param cursor Mongodb Cursor retrieved from the database driver
+	 *@return the JSON String
+	 */
+	private String cursorToJSON(MongoCursor<Document> cursor) {
+		StringBuilder sb = new StringBuilder();
+		while(cursor.hasNext()){
+			Document doc = cursor.next();
+			sb.append(doc.toJson());
+			sb.append(",");
+		}
+		
+		return "[" +((sb.length()>0)?sb.substring(0, sb.length() - 1).toString():"") + "]";
 	}
 
 }

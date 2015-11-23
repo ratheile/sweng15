@@ -34,6 +34,7 @@ import ch.uzh.sweng15.backend.pojo.Movie;
 @Path("/")
 public class MovieVisualizerAPI {
 
+
 	@Inject
 	private DatabaseAdapter adapter;
 
@@ -107,7 +108,12 @@ public class MovieVisualizerAPI {
 		return String.format("Success, inserted %d movies", movies.size());
 	}
 	
-	
+	/**
+	 * This function looks for the movies defined in
+	 * a filter received trough the api. 
+	 * @param filter the Filter containing all parameters
+	 * @return A JSON array of movies
+	 */
 	@POST
 	@Path("/movie/filtered")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -11,10 +11,10 @@ public class Filter {
 	private String country = "";
 	private String genre = "";
 	private String language = "";
-	private int fromYear = -1;
-	private int toYear = -1;
-	private int fromLength = -1;
-	private int toLength = -1;
+	private int fromYear = 0;
+	private int toYear = 0;
+	private int fromLength = 0;
+	private int toLength = 0;
 	
 	/** 
 	 * Resets the filter criteria
@@ -158,6 +158,9 @@ public class Filter {
 		this.toLength = toLength;
 	}
 
+	/**
+	 * Basic tostring implementation used for logging
+	 */
 	@Override
 	public String toString() {
 		return "Filter [title=" + title + ", country=" + country + ", genre=" + genre + ", language=" + language

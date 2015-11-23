@@ -9,6 +9,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 
+/**
+ * Test the connection to the production database.
+ * Test admin privileges of account
+ * @author shafall
+ *
+ */
 public class DatabaseConnectionTest {
 
 	@Test
