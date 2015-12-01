@@ -61,12 +61,13 @@ public class TSVParser {
         
         int tmpIndex;
         
+        
         ArrayList<String> languageList = new ArrayList<String>();
-        String language = row[6];
-        if (language.equals("{}") || language.equals("")) {
-            language = "No Value";
-        } else {
-        	while (language.indexOf(":") != -1) {
+		String language = row[6];
+		if (language.equals("{}") || language.equals("")) {
+			language = "No Value";
+		} else {
+			while (language.indexOf(":") != -1) {
 				tmpIndex = language.indexOf(":");
 				language = language.substring(tmpIndex + 3);
 				tmpIndex = language.indexOf("\"");
@@ -74,15 +75,16 @@ public class TSVParser {
 				int languageLoc = languageToAdd.indexOf(" Language");
 				if (languageLoc != -1) {
 					languageToAdd = languageToAdd.substring(0, languageLoc);
-				} 
+				}
 				languageLoc = languageToAdd.indexOf(" language");
 				if (languageLoc != -1) {
 					languageToAdd = languageToAdd.substring(0, languageLoc);
 				} 
+				languageList.add(languageToAdd);
 				language = language.substring(tmpIndex);
 			}
-
-        }
+		}
+        
         
         ArrayList<String> countryList = new ArrayList<String>();
         String country = row[7];
