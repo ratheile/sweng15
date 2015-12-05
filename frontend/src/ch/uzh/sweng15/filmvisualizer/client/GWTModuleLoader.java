@@ -32,9 +32,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * The class GWTModuleLoader creates the graphical user interface (GUI) for our film data visualizer application
+ * This class builds the graphical user interface (GUI) for our film data visualizer application
  * 
- * @author 	Joel H., Dzmitry K., Jenny S.
+ * @author 	Joel H., Dzmitry K., Jenny S., Raffael T.
  */
 
 public class GWTModuleLoader implements EntryPoint, SliderListener {
@@ -59,7 +59,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	
 	
 	/**
-	 * Entry point method: Creates a new movie collection and filter, builds the loading screen 
+	 * Entry point method: Creates a new movie collection and filter, generates the loading screen 
 	 * and gets all the relevant names to populate the various ListBoxes.
 	 */
 	public void onModuleLoad() {
@@ -71,7 +71,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 
 	/**
-	 * Create main VerticalPanel, add it to the RootPanel and display a loading data message
+	 * Create main VerticalPanel, add it to the RootPanel and display a loading message
 	 */
 	private void buildLoadScreen() {
 		// Create new main vertical panel to which all other GUI panels shall be added
@@ -82,7 +82,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		image.setUrl("/images/header.png");
 		mainVerPanel.add(image);
 
-		// Add data loading label
+		// Add loading label
 		Label loadingLabel = new Label("Loading Application. Please wait...");
 		mainVerPanel.add(loadingLabel);
 
@@ -112,7 +112,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 				System.out.println(caught);
 			}
 
-			// On successful callback, call populateTreeSets(ArrayList<TreeSet<String>> passedItemNames) method 
+			// On successful callback, call populateTreeSets() method 
 			public void onSuccess(ArrayList<TreeSet<String>> result) {
 				populateTreeSets(result);
 			}
@@ -138,10 +138,10 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 
 	/**
-	 * Create graphical user interface (GUI)
+	 * Create primary graphical user interface (GUI) elements
 	 */
 	private void buildGUI() {
-		// Remove data loading label
+		// Remove application loading label
 		mainVerPanel.remove(1);
 
 		// Add horizontal panels to main vertical panel
@@ -185,8 +185,8 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		});
 		worldMapButton.setStyleName("greenButton");
 
-		// Bar graph visualization button
-		Button barGraphButton = new Button("Country Bar Graph", new ClickHandler() {
+		// Bar chart visualization button
+		Button barChartButton = new Button("Country Bar Chart", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				toBeVisualizedAs = VisualizationType.BARGRAPH;
 				if (dataIsUpToDate) {
@@ -196,7 +196,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 				}
 			}
 		});
-		barGraphButton.setStyleName("purpleButton");
+		barChartButton.setStyleName("purpleButton");
 
 		// Genre pie chart visualization button
 		Button countryPieChartButton = new Button("Genre Pie Chart", new ClickHandler() {
@@ -237,7 +237,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		});
 		histogramButton.setStyleName("purpleButton");
 		
-		// Print (Export PDF) button
+		// Print (Save as PDF) button
 		Button printButton = new Button("Print (Save as PDF)", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				printOrSaveAsPDF();
@@ -259,74 +259,15 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 		horButtonPanel.add(tableButton);
 		horButtonPanel.add(worldMapButton);
-		horButtonPanel.add(barGraphButton);
+		horButtonPanel.add(barChartButton);
 		horButtonPanel.add(countryPieChartButton);
 		horButtonPanel.add(languagePieChartButton);
 		horButtonPanel.add(histogramButton);
 		horButtonPanel.add(printButton);
 		horButtonPanel.add(exportCSVButton);
 
-		// Add horizontal panel with all button to main vertical panel
+		// Add horizontal panel with all buttons to main vertical panel
 		mainVerPanel.add(horButtonPanel);  
-	}
-
-
-	/**
-	 * Get film data set from server
-	 */
-	private void getDataSet() {
-		// Inform user of data loading process
-		addLoadingLabel();
-		
-		if (filmLoaderSvc == null) {
-			filmLoaderSvc = GWT.create(FilmLoader.class);
-		}
-
-		// Set up the callback object.
-		AsyncCallback<MovieCollection> callback = new AsyncCallback<MovieCollection>() {
-			public void onFailure(Throwable caught) {
-				System.out.println(caught);
-			}
-
-			// The getDataSet() method is called by a visualizing GUI event (e.g. user clicks on the "World Map" button).
-			// The toBeVisualizedAs variable stores what kind of visualization was chosen at that time, so that the correct
-			// type is displayed after the asynchronous callback.
-			public void onSuccess(MovieCollection result) {
-				if (toBeVisualizedAs == VisualizationType.TABLE) {
-					loadDataSet(result);
-					visualizeInTable();
-				} else if (toBeVisualizedAs == VisualizationType.WORLDMAP) {
-					loadDataSet(result);
-					visualizeWorldMap();
-				} else if (toBeVisualizedAs == VisualizationType.HISTOGRAM) {
-					loadDataSet(result);
-					visualizeHistogram();
-				} else if (toBeVisualizedAs == VisualizationType.BARGRAPH) {
-					loadDataSet(result);
-					visualizeBarChart();
-				} else if (toBeVisualizedAs == VisualizationType.GENRE_PIECHART) {
-					loadDataSet(result);
-					visualizeGenrePieChart();
-				} else if (toBeVisualizedAs == VisualizationType.LANGUAGE_PIECHART) {
-					loadDataSet(result);
-					visualizeLanguagePieChart();
-				} else if (toBeVisualizedAs == VisualizationType.HISTOGRAM) {
-					loadDataSet(result);
-					visualizeHistogram();
-				}
-			}
-		};
-
-		filmLoaderSvc.getRemoteMovieCollection(filter, callback);
-	}
-
-	/**
-	 * Called on successful callback, loads the movie collection
-	 * @param passedCollection The MovieCollection retrieved from the server
-	 */
-	private void loadDataSet(MovieCollection passedCollection) {
-		movieCollection = passedCollection;
-		dataIsUpToDate = true;
 	}
 
 
@@ -353,9 +294,11 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		countryBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
+				// If the user reselects the ListBox name, reset the filter
 				if (countryBox.getValue(countryBox.getSelectedIndex()).equals("Country")) {
-					filter.setCountry(null);
+					filter.setCountry("");
 					dataIsUpToDate = false;
+				// Set the filter to the user's choice
 				} else {
 					filter.setCountry(countryBox.getValue(countryBox.getSelectedIndex()));
 					dataIsUpToDate = false;
@@ -385,7 +328,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 			@Override
 			public void onChange(ChangeEvent event) {
 				if (genreBox.getValue(genreBox.getSelectedIndex()).equals("Genre")) {
-					filter.setGenre(null);
+					filter.setGenre("");
 					dataIsUpToDate = false;
 				} else {
 					filter.setGenre(genreBox.getValue(genreBox.getSelectedIndex()));
@@ -396,6 +339,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		genreBox.setVisibleItemCount(1);
 		genreBox.getElement().getStyle().setWidth(150, Unit.PX);
 
+		
 		// Language box
 		final ListBox languageBox = new ListBox() {
 			@Override
@@ -415,7 +359,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 			@Override
 			public void onChange(ChangeEvent event) {
 				if (languageBox.getValue(languageBox.getSelectedIndex()).equals("Language")) {
-					filter.setLanguage(null);
+					filter.setLanguage("");
 					dataIsUpToDate = false;
 				} else {
 					filter.setLanguage(languageBox.getValue(languageBox.getSelectedIndex()));
@@ -425,6 +369,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		});
 		languageBox.setVisibleItemCount(1);
 		languageBox.getElement().getStyle().setWidth(150, Unit.PX);
+		
 
 		// Length range boxes
 		HorizontalPanel horLengthRangePanel = new HorizontalPanel();
@@ -497,7 +442,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		});
 		toLength.setVisibleItemCount(1);
 
-		// Construct length panel out of label and ListBoxes
+		// Construct length panel out of Label and ListBoxes
 		VerticalPanel verLengthListBoxes = new VerticalPanel();	    
 		horLengthRangePanel.add(lengthLabel);
 		verLengthListBoxes.add(fromLength);
@@ -528,6 +473,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		horSliderPanel.add(rangeLabel);
 		horSliderPanel.add(rangeSliderLabel);
 		horSliderPanel.add(sliderContainer);
+		
 		// Add listener to slider in order to react to onSlide events
 		rangeSlider.addListener(this);
 
@@ -550,7 +496,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 				// Empty search box
 				titleTextBox.setText("");
 
-				// Reset actual filters
+				// Reset the filter
 				filter.resetFilter();
 				dataIsUpToDate = false;
 			}
@@ -597,7 +543,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 				// for the pen-ultimate has now become ultimate. 
 				// In order to support emptying the title field without having to hit the reset button, we simply set the filter to "" 
 				// if either the delete or the backspace keys are used (using the getText() method would result in otherwise buggy behavior).
-				// This has no other negative effects for our application.
+				// This issue has no other negative effects on our application.
 				} else if ((event.getNativeKeyCode() == KeyCodes.KEY_DELETE) || (event.getNativeKeyCode() == KeyCodes.KEY_BACKSPACE)) {
 					filter.setTitle("");
 					dataIsUpToDate = false;
@@ -622,10 +568,69 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		// Add to main vertical panel
 		mainVerPanel.add(horSearchPanel);
 	}
+	
+	
+	/**
+	 * Get film data set from server
+	 */
+	private void getDataSet() {
+		// Inform user of data loading process
+		addLoadingLabel();
+		
+		if (filmLoaderSvc == null) {
+			filmLoaderSvc = GWT.create(FilmLoader.class);
+		}
+
+		// Set up the callback object.
+		AsyncCallback<MovieCollection> callback = new AsyncCallback<MovieCollection>() {
+			public void onFailure(Throwable caught) {
+				System.out.println(caught);
+			}
+
+			// The getDataSet() method is called by a visualizing GUI event (e.g. user clicks on the "World Map" button).
+			// The toBeVisualizedAs variable stores what kind of visualization was chosen at that time, so that the correct
+			// type is displayed after the asynchronous callback.
+			public void onSuccess(MovieCollection result) {
+				if (toBeVisualizedAs == VisualizationType.TABLE) {
+					loadDataSet(result);
+					visualizeInTable();
+				} else if (toBeVisualizedAs == VisualizationType.WORLDMAP) {
+					loadDataSet(result);
+					visualizeWorldMap();
+				} else if (toBeVisualizedAs == VisualizationType.HISTOGRAM) {
+					loadDataSet(result);
+					visualizeHistogram();
+				} else if (toBeVisualizedAs == VisualizationType.BARGRAPH) {
+					loadDataSet(result);
+					visualizeBarChart();
+				} else if (toBeVisualizedAs == VisualizationType.GENRE_PIECHART) {
+					loadDataSet(result);
+					visualizeGenrePieChart();
+				} else if (toBeVisualizedAs == VisualizationType.LANGUAGE_PIECHART) {
+					loadDataSet(result);
+					visualizeLanguagePieChart();
+				} else if (toBeVisualizedAs == VisualizationType.HISTOGRAM) {
+					loadDataSet(result);
+					visualizeHistogram();
+				}
+			}
+		};
+
+		filmLoaderSvc.getRemoteMovieCollection(filter, callback);
+	}
+
+	/**
+	 * Called on successful callback, loads the movie collection
+	 * @param passedCollection The MovieCollection retrieved from the server
+	 */
+	private void loadDataSet(MovieCollection passedCollection) {
+		movieCollection = passedCollection;
+		dataIsUpToDate = true;
+	}
 
 
 	/**
-	 * Remove old visualization, source, ad banner, or loading label
+	 * Remove old visualization, source, ad banner or loading label
 	 */
 	private void removeOldPanels() {
 		if (isAdvertised && !isDisplayed && !isLoading) {
@@ -665,6 +670,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 		// If the user searched for a specific movie, or only one movie applies to the selected filter criteria
 		if (movieCollection.getMovieCollectionSize() == 1) {
 			MovieWorldMapVisualizer worldMap = new MovieWorldMapVisualizer(movieCollection.getMovies().get(0));
+			// Store graphical representation for print function
 			printWidget = worldMap.createVisualization();
 			mainVerPanel.add(printWidget);
 			isDisplayed = true;
@@ -680,8 +686,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	}
 	
 	/**
-	 * Visualize distribution of countries in a bar chart. Countries can be visualized this way, even though they
-	 * may no longer exist such as the Soviet Union. 
+	 * Visualize the most popular countries for movie production in a bar chart. 
 	 */  
 	private void visualizeBarChart() {
 		removeOldPanels();
@@ -720,7 +725,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	}
 
 	/**
-	 * Visualize movie lengths in histogram.
+	 * Visualize movie length distribution in a histogram.
 	 */  
 	private void visualizeHistogram() {
 		removeOldPanels();
@@ -738,7 +743,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	 * the visualization can also be saved as a PDF file. 
 	 */
     private void printOrSaveAsPDF() {
-    	// If a graphical visualization is displayed on the user screen
+    	// Check whether a graphical visualization is currently displayed on the user screen
     	if ((printWidget != null) && (toBeVisualizedAs != VisualizationType.TABLE) && (toBeVisualizedAs != VisualizationType.NONE)) {
     		Print.it(printWidget);
     	} else {
@@ -748,10 +753,10 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
     
     
     /**
-	 * Get a link to a CSV File containing all movies corresponding to the filter criteria
+	 * Get a link to a remote CSV File containing all the movies corresponding to the filter criteria
 	 */
 	private void getExportCSVLink() {
-		// Inform user of data loading process
+		// Inform user of loading process
 		addLoadingLabel();
 		
 		if (filmLoaderSvc == null) {
@@ -774,13 +779,14 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	}
     
     /**
-	 * Display link for CSV file of movie selection
+	 * Display link for remote CSV file
+	 * @param CSVLink URL of remote CSV file
 	 */
     private void displayExportLink(String CSVLink) {
     	removeOldPanels();
-    	// A link and not a visualization is displayed. 
+    	// A link and not a visualization is being displayed, so set the visualization type to none. 
     	toBeVisualizedAs = VisualizationType.NONE;
-    	Anchor exportLink = new Anchor("Right-Click to Download Movie Selection as CSV File", CSVLink);
+    	Anchor exportLink = new Anchor("Click to Download Movie Selection as CSV File", CSVLink);
     	mainVerPanel.add(exportLink);
 		isDisplayed = true;
 		addSource();
@@ -789,7 +795,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	
     
     /**
-	 * Add source as footnote to all visualizations
+	 * Add source as footnote to all visualizations and export link display
 	 */  
 	private void addSource() {		
 		Label licenseTitleLabel = new Label("License:");
@@ -832,7 +838,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	 */  
 	private void addLoadingLabel() {
 		removeOldPanels();
-		Label loadingLabel = new Label("Loading film data. Please wait...");
+		Label loadingLabel = new Label("Loading data. Please wait...");
 		mainVerPanel.add(loadingLabel);
 		isLoading = true;
 		addSource();
@@ -842,6 +848,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 	/**
 	 * React to a slide event by setting the filter accordingly
+	 * @param e A SliderEvent caused by the user
 	 */
 	@Override
 	public boolean onSlide(SliderEvent e) {
@@ -857,6 +864,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 	/**
 	 * Slider onChange method
+	 * @param e A SliderEvent caused by the user
 	 */
 	@Override
 	public void onChange(SliderEvent e) {
@@ -865,6 +873,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 	/**
 	 * Slider onStart method
+	 * @param e A SliderEvent caused by the user
 	 */
 	@Override
 	public void onStart(SliderEvent e) {
@@ -873,6 +882,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 	/**
 	 * Slider onStop method
+	 * @param e A SliderEvent caused by the user
 	 */
 	@Override
 	public void onStop(SliderEvent e) {

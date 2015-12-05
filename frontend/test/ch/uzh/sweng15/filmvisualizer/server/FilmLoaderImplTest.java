@@ -30,35 +30,23 @@ public class FilmLoaderImplTest {
 	public void setUp() {
 		testloader = new FilmLoaderImpl();
 	}
-
+	
 	/** 
-	 * Test parsing a JSON string containing the information of a single movie
+	 * Test converting the filter into a JSONObject
 	 */
 	@Test
-	public void testParseMovieJSON() {
-		String testString = "{ \"_id\" : { \"$oid\" : \"56508acde8939d31e6f7ee6f\" }, \"title\" : \"Whity\", \"language\" : [\"German\"], \"genre\" : [\"Western\", \"Drama\", \"World cinema\"], \"country\" : [\"Germany\"], \"length\" : 95, \"year\" : 1971 }";
-		MovieCollection testCollection = new MovieCollection();
-		
-		testCollection = testloader.parseMovieJSON(testString);
-		
-		assertTrue(testCollection.getMovies().get(0).getTitle().equals("Whity"));
-		assertTrue(testCollection.getMovies().get(0).getYear().equals(1971));
-		assertTrue(testCollection.getMovies().get(0).getLength().equals(95));
-		ArrayList<String> countryList = new ArrayList<String>();
-		countryList.add("Germany");
-		ArrayList<String> genreList = new ArrayList<String>();
-		genreList.add("Western");
-		genreList.add("Drama");
-		genreList.add("World cinema");
-		ArrayList<String> languageList = new ArrayList<String>();
-		languageList.add("German");
-		assertTrue(testCollection.getMovies().get(0).getCountry().equals(countryList));
-		assertTrue(testCollection.getMovies().get(0).getGenre().equals(genreList));
-		assertTrue(testCollection.getMovies().get(0).getLanguage().equals(languageList));
+	public void testConvertFilterToJSON() {
+		Filter filter = new Filter();
+		filter.setCountry("Switzerland");
+		filter.setFromYear(2000);
+		JSONObject testObject = testloader.convertFilterToJSON(filter);
+		assertTrue(testObject instanceof JSONObject);
+		String testString = "{\"genre\":\"\",\"title\":\"\",\"toLength\":0,\"fromLength\":0,\"toYear\":0,\"language\":\"\",\"fromYear\":2000,\"country\":\"Switzerland\"}";
+		assertTrue(testObject.toString().equals(testString));
 	}
 	
 	/** 
-	 * Test parsing a JSON string containing the information of an array of movies
+	 * Test parsing a JSON string containing movie information 
 	 */
 	@Test
 	public void testParseMovieJSONArray() {
@@ -99,20 +87,6 @@ public class FilmLoaderImplTest {
 	}
 	
 	/** 
-	 * Test converting the filter into a JSONObject
-	 */
-	@Test
-	public void testConvertFilterToJSON() {
-		Filter filter = new Filter();
-		filter.setCountry("Switzerland");
-		filter.setFromYear(2000);
-		JSONObject testObject = testloader.convertFilterToJSON(filter);
-		assertTrue(testObject instanceof JSONObject);
-		String testString = "{\"genre\":\"\",\"title\":\"\",\"toLength\":0,\"fromLength\":0,\"toYear\":0,\"language\":\"\",\"fromYear\":2000,\"country\":\"Switzerland\"}";
-		assertTrue(testObject.toString().equals(testString));
-	}
-	
-	/** 
 	 * Test getListBoxItemNames() method, storing the names of all genres, countries, and languages
 	 */
 	@Test
@@ -141,94 +115,99 @@ public class FilmLoaderImplTest {
 	}
 	
 	/** 
-	 * Test getExportCSVLink() method, sending an non-empty filter to the remote server and receiving back a link to a CSV File.
+	 * Test parseExportLink(), which parses a JSON string containing an ID
+	 */
+	@Test
+	public void testParseExportLink() {
+		String compareString = "qhc9hs8ee6i3q51rgvs2756c5p";
+		String testString = testloader.parseExportLink("{ \"id\" : \"qhc9hs8ee6i3q51rgvs2756c5p\" }");
+		assertTrue(testString.equals(compareString));
+	}
+	
+	/** 
+	 * Test getRemoteMovieCollection() method, sending an empty filter to the remote server and receiving back the whole, or a part of the (depending on server settings), database
+	 */
+	@Test
+	public void testGetRemoteMovieCollection() {
+		Filter filter = new Filter();
+		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
+		assertTrue(testCollection.getMovieCollectionSize()>0);
+	}
+	
+	/** 
+	 * Test getRemoteMovieCollection() method, sending a title filter to the remote server and receiving back the correct movie
+	 */
+	@Test
+	public void testTitleFilter() {
+		Filter filter = new Filter();
+		filter.setTitle("Pontypool");
+		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
+		assertTrue(testCollection.getMovieCollectionSize()>0);
+		
+		assertTrue(testCollection.getMovies().get(0).getTitle().equals("Pontypool"));
+		assertTrue(testCollection.getMovies().get(0).getYear().equals(2008));
+		assertTrue(testCollection.getMovies().get(0).getLength().equals(96));
+		ArrayList<String> countryList = new ArrayList<String>();
+		countryList.add("Canada");
+		ArrayList<String> genreList = new ArrayList<String>();
+		genreList.add("Zombie Film");
+		genreList.add("Drama");
+		genreList.add("Horror");
+		genreList.add("Psychological thriller");
+		genreList.add("Film adaptation");
+		ArrayList<String> languageList = new ArrayList<String>();
+		languageList.add("English");
+		assertTrue(testCollection.getMovies().get(0).getCountry().equals(countryList));
+		assertTrue(testCollection.getMovies().get(0).getGenre().equals(genreList));
+		assertTrue(testCollection.getMovies().get(0).getLanguage().equals(languageList));
+	}
+	
+	/** 
+	 * Test getRemoteMovieCollection() method, sending a country filter to the remote server and receiving back the correct set of movies
+	 */
+	@Test
+	public void TestCountryFilter() {
+		Filter filter = new Filter();
+		filter.setCountry("Zambia");
+		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
+		assertTrue(testCollection.getMovieCollectionSize()==3);
+		
+		ArrayList<String> titles = new ArrayList<String>();
+		titles.add("Slipstream");
+		titles.add("The Grass Is Singing");
+		titles.add("Mwansa the Great");
+		
+		for (Movie m : testCollection.getMovies()) {
+			assertTrue(titles.contains(m.getTitle()));
+		}
+	}
+	
+	/** 
+	 * Test getRemoteMovieCollection() method, sending a multitude of filters to the remote server and receiving back the correct movie
+	 */
+	@Test
+	public void TestGenreFilters() {
+		Filter filter = new Filter();
+		filter.setCountry("United States of America");
+		filter.setGenre("Drama");
+		filter.setLanguage("Russian");
+		filter.setFromYear(2010);
+		filter.setToLength(100);
+		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
+		
+		assertTrue(testCollection.getMovies().get(0).getTitle().equals("Bobby Fischer Against The World"));
+	}
+	
+	/** 
+	 * Test getExportCSVLink() method, sending an non-empty filter to the remote server and receiving back a link.
 	 */
 	@Test
 	public void testgetExportCSVLink() {
 		Filter filter = new Filter();
 		filter.setCountry("Zambia");
 		String exportCSVLink = testloader.getExportCSVLink(filter);
-		assertTrue(exportCSVLink.startsWith("http"));
-		assertTrue(exportCSVLink.endsWith(".txt"));
+		String APILink = "http://backend-sweng15.rhcloud.com/backend/api/csv/";
+		assertTrue(exportCSVLink.startsWith(APILink));
+		assertTrue(exportCSVLink.length() > APILink.length());
 	}
-
-	
-//	/** 
-//	 * Test getRemoteMovieCollection() method, which tests the interaction between the front- and backend,
-//	 * sending an empty filter to the remote server and receiving back the whole, or a part of the (depending on server settings), database
-//	 */
-//	@Test
-//	public void testGetRemoteMovieCollection() {
-//		Filter filter = new Filter();
-//		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
-//		assertTrue(testCollection.getMovieCollectionSize()>0);
-//	}
-//	
-//	/** 
-//	 * Test getRemoteMovieCollection() method, which tests the interaction between the front- and backend,
-//	 * sending a title filter to the remote server and receiving back the correct movie
-//	 */
-//	@Test
-//	public void testTitleFilter() {
-//		Filter filter = new Filter();
-//		filter.setTitle("Pontypool");
-//		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
-//		assertTrue(testCollection.getMovieCollectionSize()>0);
-//		
-//		assertTrue(testCollection.getMovies().get(0).getTitle().equals("Pontypool"));
-//		assertTrue(testCollection.getMovies().get(0).getYear().equals(2008));
-//		assertTrue(testCollection.getMovies().get(0).getLength().equals(96));
-//		ArrayList<String> countryList = new ArrayList<String>();
-//		countryList.add("Canada");
-//		ArrayList<String> genreList = new ArrayList<String>();
-//		genreList.add("Zombie Film");
-//		genreList.add("Drama");
-//		genreList.add("Horror");
-//		genreList.add("Psychological thriller");
-//		genreList.add("Film adaptation");
-//		ArrayList<String> languageList = new ArrayList<String>();
-//		languageList.add("English");
-//		assertTrue(testCollection.getMovies().get(0).getCountry().equals(countryList));
-//		assertTrue(testCollection.getMovies().get(0).getGenre().equals(genreList));
-//		assertTrue(testCollection.getMovies().get(0).getLanguage().equals(languageList));
-//	}
-//	
-//	/** 
-//	 * Test getRemoteMovieCollection() method, which tests the interaction between the front- and backend,
-//	 * sending a country filter to the remote server and receiving back the correct set of movies
-//	 */
-//	@Test
-//	public void TestCountryFilter() {
-//		Filter filter = new Filter();
-//		filter.setCountry("Zambia");
-//		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
-//		assertTrue(testCollection.getMovieCollectionSize()==3);
-//		
-//		ArrayList<String> titles = new ArrayList<String>();
-//		titles.add("Slipstream");
-//		titles.add("The Grass Is Singing");
-//		titles.add("Mwansa the Great");
-//		
-//		for (Movie m : testCollection.getMovies()) {
-//			assertTrue(titles.contains(m.getTitle()));
-//		}
-//	}
-//	
-//	/** 
-//	 * Test getRemoteMovieCollection() method, which tests the interaction between the front- and backend,
-//	 * sending a multitude of filters to the remote server and receiving back the correct movie
-//	 */
-//	@Test
-//	public void TestGenreFilters() {
-//		Filter filter = new Filter();
-//		filter.setCountry("United States of America");
-//		filter.setGenre("Drama");
-//		filter.setLanguage("Russian");
-//		filter.setFromYear(2010);
-//		filter.setToLength(100);
-//		MovieCollection testCollection = testloader.getRemoteMovieCollection(filter);
-//		
-//		assertTrue(testCollection.getMovies().get(0).getTitle().equals("Bobby Fischer Against The World"));
-//	}
-	
 }

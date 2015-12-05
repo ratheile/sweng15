@@ -18,21 +18,20 @@ import com.googlecode.gwt.charts.client.options.ChartArea;
 public class LanguagePieChartVisualizer extends PieChartVisualizer {
 
 	/**
-	 * Constructor with parameters
+	 * Constructor with parameter
 	 * @param movieCollection Collection of movies that should be visualized
-	 * @param languageSet TreeSet<String> containing all languages in the movie collection
 	 */
-	public LanguagePieChartVisualizer(MovieCollection mc) {
-		super(mc);
+	public LanguagePieChartVisualizer(MovieCollection movieCollection) {
+		super(movieCollection);
 	}
 
 	/** 
-	 * Creates the pie chart visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the pie chart visualization, using the Google Charts framework.
 	 */
 	protected void draw() {
 		// Determine movie count of every language
 		HashMap<String, Integer> languageMap = new HashMap<String, Integer>();
-		for (Movie m : mc.getMovies()) {
+		for (Movie m : movieCollection.getMovies()) {
 			for (String s : m.getLanguage()) {
 				if (languageMap.containsKey(s)) {
 					int tmpCount = languageMap.get(s);

@@ -11,7 +11,7 @@ import ch.uzh.sweng15.filmvisualizer.client.Movie;
 import ch.uzh.sweng15.filmvisualizer.client.MovieCollection;
 
 /**
- * Unit tests for the {@link MovieCollection} class.
+ * Unit tests for the {@link MovieCollection} class
  * 
  * @author 	Joel H.
  */
@@ -21,7 +21,7 @@ public class MovieCollectionTest {
 	private Movie testMovie;
 	
 	/** 
-	 * Set up before each unit test is to create a new MovieCollection and a {@link Movie} object.
+	 * Create a new MovieCollection and a {@link Movie} object before each unit test
 	 */
 	@Before
 	public void setup() {

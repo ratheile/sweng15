@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Unit tests for the {@link Filter} class.
+ * Unit tests for the {@link Filter} class
  * 
  * @author 	Joel H.
  */
@@ -16,7 +16,7 @@ public class FilterTest {
 	Filter testFilter;
 
 	/** 
-	 * Create the a Filter object before each unit test
+	 * Create a Filter object before each unit test
 	 */
 	@Before
 	public void setUp() {
@@ -24,7 +24,7 @@ public class FilterTest {
 	}
 	
 	/** 
-	 * Tests that instance variables are corrected initialized
+	 * Tests that instance variables are correctly initialized
 	 */
 	@Test
 	public void testInstanceVariableInitializers() {

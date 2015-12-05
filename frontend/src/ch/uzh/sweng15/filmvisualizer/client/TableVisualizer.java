@@ -13,7 +13,7 @@ import com.googlecode.gwt.charts.client.table.TableOptions;
 import com.googlecode.gwt.charts.client.table.TablePage;
 
 /** 
- * The TableVisualizer class displays the content of an {@link MovieCollection} in the form a table
+ * The TableVisualizer class displays the content of an {@link MovieCollection} in a table
  * 
  * @author 	Dzmitry K.
  */
@@ -21,18 +21,18 @@ import com.googlecode.gwt.charts.client.table.TablePage;
 public class TableVisualizer implements Visualizer {
 	private Table table;
 	private FocusPanel returnPanel;
-	private MovieCollection mc;
+	private MovieCollection movieCollection;
 
 	/**
 	 * Constructor with parameter
-	 * @param mc Collection of movies that should be visualized
+	 * @param movieCollection Collection of movies that should be visualized
 	 */
-	public TableVisualizer(MovieCollection mc) {
-		this.mc = mc;
+	public TableVisualizer(MovieCollection movieCollection) {
+		this.movieCollection = movieCollection;
 	}
 
 	/** 
-	 * Creates a Widget, in which the table will be drawn, and calls the draw() method to visualize the table.
+	 * Creates a table visualization and returns it in a Widget.
 	 * @return Widget The movie collection visualized in table form
 	 */
 	public Widget createVisualization() {
@@ -42,7 +42,6 @@ public class TableVisualizer implements Visualizer {
 		chartLoader.loadApi(new Runnable() {
 			@Override
 			public void run() {
-				// Add to-be-drawn table to a Widget, here a FocusPanel, and draw the table
 				table = new Table();
 				returnPanel.setWidget(table);
 				draw();
@@ -53,7 +52,7 @@ public class TableVisualizer implements Visualizer {
 	}
 
 	/** 
-	 * Creates the table visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the table visualization, using the Google Charts framework.
 	 */
 	private void draw() {
 		// Create DataTable
@@ -64,12 +63,11 @@ public class TableVisualizer implements Visualizer {
 		dataTable.addColumn(ColumnType.STRING, "Country");
 		dataTable.addColumn(ColumnType.STRING, "Genre");
 		dataTable.addColumn(ColumnType.STRING, "Language");
-
-		// Populate DataTable
-		ArrayList<Movie> movieList = mc.getMovies();
 		
+		ArrayList<Movie> movieList = movieCollection.getMovies();
 		dataTable.addRows(movieList.size());
 		
+		// Populate DataTable
 		int i = 0;
 		for (Movie m : movieList) {
 			dataTable.setValue(i, 0, m.getTitle());

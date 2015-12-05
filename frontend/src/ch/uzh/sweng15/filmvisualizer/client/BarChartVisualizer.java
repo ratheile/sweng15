@@ -21,7 +21,7 @@ import com.googlecode.gwt.charts.client.options.TextStyle;
 
 
 /** 
- * This class displays the distribution of genres in a {@link MovieCollection} in a bar chart
+ * This class displays the most popular countries for movie production of a {@link MovieCollection} in a bar chart
  * 
  * @author 	Dzmitry K.
  */
@@ -29,19 +29,19 @@ import com.googlecode.gwt.charts.client.options.TextStyle;
 public class BarChartVisualizer implements Visualizer{
 	private FocusPanel focusPanel;
 	private ColumnChart columnChart;
-	private MovieCollection mc;
+	private MovieCollection movieCollection;
 
 	/**
 	 * Constructor with parameters
-	 * @param mc Collection of movies that should be visualized
+	 * @param movieCollection Collection of movies that should be visualized
 	 */
-	public BarChartVisualizer (MovieCollection mc) {
-		this.mc = mc;
+	public BarChartVisualizer (MovieCollection movieCollection) {
+		this.movieCollection = movieCollection;
 	}
 
 	/** 
 	 * Creates the bar chart visualization and returns it in a Widget
-	 * @return Widget The movie collection visualized in bar chart form
+	 * @return Widget Containing the movie collection visualized in bar chart form
 	 */
 	public Widget createVisualization() {
 		focusPanel = new FocusPanel();
@@ -59,12 +59,12 @@ public class BarChartVisualizer implements Visualizer{
 	}
 
 	/** 
-	 * Creates the bar chart visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the bar chart visualization, using the Google Charts framework.
 	 */
 	private void draw() {
 		// Determine movie count of every country
 		HashMap<String, Integer> countryMap = new HashMap<String, Integer>();
-		for (Movie m : mc.getMovies()) {
+		for (Movie m : movieCollection.getMovies()) {
 			for (String country : m.getCountry()) {
 				if (countryMap.containsKey(country)) {
 					int tmpCount = countryMap.get(country);
@@ -76,7 +76,7 @@ public class BarChartVisualizer implements Visualizer{
 			}
 		}
 		
-		// Prepare the data
+		// Create DataTable
 		DataTable dataTable = DataTable.create();
 		dataTable.addColumn(ColumnType.STRING, "Country");
 		dataTable.addColumn(ColumnType.NUMBER, "Count");

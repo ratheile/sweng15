@@ -50,14 +50,14 @@ public class Movie implements Serializable {
 	 * @return String containing the relevant information of a movie
 	 */
 	public String getRelevantMovieInfo() {
-		// Limit the number of displayed genres
+		// If necessary, limit the number of displayed genres
 		List<String> genreList = (List<String>)this.getGenre().clone();
 		if (genreList.size() > 2) {
 			genreList = genreList.subList(0, 2);
 			genreList.add("...");
 		}
 		
-		// Limit the number of displayed languages
+		// If necessary, limit the number of displayed languages
 		List<String> languageList = (List<String>)this.getLanguage().clone();
 		if (languageList.size() > 2) {
 			languageList = languageList.subList(0, 2);
@@ -119,16 +119,16 @@ public class Movie implements Serializable {
 	}
 
 	/** 
-	 * Gets an ArrayList with all the genres of the movie
-	 * @return ArrayList<String> New genres of the movie 
+	 * Gets the genre or genres of the movie
+	 * @return ArrayList<String> Genre or genres of the movie 
 	 */
 	public ArrayList<String> getGenre() {
 		return genre;
 	}
 
 	/** 
-	 * Sets the genres of the movie
-	 * @param genre ArrayList of genres of the movie
+	 * Sets the genre or genres of the movie
+	 * @param genre New genre or genres of the movie
 	 */
 	public void setGenre(ArrayList<String> genre) {
 		this.genre = genre;

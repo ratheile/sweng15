@@ -19,19 +19,19 @@ public class GenrePieChartVisualizer extends PieChartVisualizer {
 	
 	/**
 	 * Constructor with parameters
-	 * @param mc Collection of movies that should be visualized
+	 * @param movieCollection Collection of movies that should be visualized
 	 */
-	public GenrePieChartVisualizer(MovieCollection mc) {
-		super(mc);
+	public GenrePieChartVisualizer(MovieCollection movieCollection) {
+		super(movieCollection);
 	}
 
 	/** 
-	 * Creates the pie chart visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the pie chart visualization, using the Google Charts framework. 
 	 */
 	protected void draw() {
 		// Determine movie count of every genre
 		HashMap<String, Integer> genreMap = new HashMap<String, Integer>();
-		for (Movie m : mc.getMovies()) {
+		for (Movie m : movieCollection.getMovies()) {
 			for (String s : m.getGenre()) {
 				if (genreMap.containsKey(s)) {
 					int tmpCount = genreMap.get(s);

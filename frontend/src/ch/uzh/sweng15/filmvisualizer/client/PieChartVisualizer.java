@@ -15,14 +15,14 @@ import com.googlecode.gwt.charts.client.corechart.PieChart;
 public abstract class PieChartVisualizer implements Visualizer {
 	protected FocusPanel focusPanel;
 	protected PieChart pieChart;
-	protected MovieCollection mc;
+	protected MovieCollection movieCollection;
 
 	/**
 	 * Constructor with parameters
 	 * @param movieCollection Collection of movies that should be visualized
 	 */
-	public PieChartVisualizer(MovieCollection mc) {
-		this.mc = mc;
+	public PieChartVisualizer(MovieCollection movieCollection) {
+		this.movieCollection = movieCollection;
 	}
 
 	/** 

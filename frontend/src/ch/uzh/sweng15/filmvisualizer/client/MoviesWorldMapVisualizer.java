@@ -28,7 +28,7 @@ public class MoviesWorldMapVisualizer extends WorldMapVisualizer {
 	}
 
 	/** 
-	 * Creates the world map visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the world map visualization, using the Google Charts framework.
 	 */
 	protected void draw() {			
 		// Determine movie count of every country

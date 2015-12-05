@@ -3,7 +3,7 @@ package ch.uzh.sweng15.filmvisualizer.client;
 import com.google.gwt.user.client.ui.Widget;
 
 /** 
- * Interface for graphical representation of a selection of movies 
+ * Interface for visualizing a {@link MovieCollection} 
  * 
  * @author 	Dzmitry K.
  */

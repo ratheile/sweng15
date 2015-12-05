@@ -10,7 +10,7 @@ import org.junit.Test;
 import ch.uzh.sweng15.filmvisualizer.client.Movie;
 
 /**
- * Unit tests for the {@link Movie} class.
+ * Unit tests for the {@link Movie} class
  * 
  * @author 	Joel H.
  */

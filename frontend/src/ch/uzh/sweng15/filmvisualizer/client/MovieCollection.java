@@ -15,7 +15,7 @@ public class MovieCollection implements Serializable {
 	private ArrayList<Movie> movies;
 
 	/**
-	 * Constructs a new MovieCollection object that populates itself
+	 * Constructor
 	 */
 	public MovieCollection() {
 		movies = new ArrayList<Movie>();

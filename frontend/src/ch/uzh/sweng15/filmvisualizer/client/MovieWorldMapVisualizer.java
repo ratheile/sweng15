@@ -24,7 +24,7 @@ public class MovieWorldMapVisualizer extends WorldMapVisualizer {
 	}
 
 	/** 
-	 * Creates the world map visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the world map visualization, using the Google Charts framework.
 	 */
 	protected void draw() {
 		// Create DataTable
@@ -38,8 +38,8 @@ public class MovieWorldMapVisualizer extends WorldMapVisualizer {
 		int i = 0;
 		for (String country : movie.getCountry()) {
 			dataTable.setValue(i, 0, country);
-			// The printString() method produces all the information of an individual film, which is displayed 
-			// if the user moves the cursor over the appropriate country
+			// The getRelevantMovieInfo() method returns all the important information of an individual film, 
+			// which is displayed when the user moves the cursor over the appropriate country
 			dataTable.setValue(i, 1, movie.getRelevantMovieInfo());
 			dataTable.setValue(i, 2, 1);
 			i++;

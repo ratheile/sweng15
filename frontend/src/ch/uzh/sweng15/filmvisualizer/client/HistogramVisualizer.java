@@ -15,7 +15,7 @@ import com.googlecode.gwt.charts.client.options.Legend;
 import com.googlecode.gwt.charts.client.options.LegendPosition;
 
 /**
- * This class displays the lengths of all {@link Movie} in a {@link MovieCollection} in a histogram.
+ * This class displays the lengths of all movies in a {@link MovieCollection} in a histogram.
  * 
  * @author 	Dzmitry K.
  */
@@ -53,19 +53,18 @@ public class HistogramVisualizer implements Visualizer {
 	}
 
 	/** 
-	 * Creates the histogram visualization, using the Google Charts framework. See Google Charts API for more detail.
+	 * Creates the histogram visualization, using the Google Charts framework.
 	 */
 	private void draw() {
 		// Create DataTable
 		DataTable dataTable = DataTable.create();
 		dataTable.addColumn(ColumnType.STRING, "Title");
 		dataTable.addColumn(ColumnType.NUMBER, "Length");
-	
-		// Populate DataTable
-		ArrayList<Movie> movieList = movieCollection.getMovies();
 		
+		ArrayList<Movie> movieList = movieCollection.getMovies();
 		dataTable.addRows(movieList.size());
 		
+		// Populate DataTable
         int i = 0;
         for (Movie m : movieList) {
         	if (m.getLength() != -1) {

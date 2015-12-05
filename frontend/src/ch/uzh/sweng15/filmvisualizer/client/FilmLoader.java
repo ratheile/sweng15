@@ -16,7 +16,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface FilmLoader extends RemoteService 	{
 	
 	/** 
-	 * Retrieves movie data from a remote server for the client and passes it back to the client as a {@link MovieCollection}.
+	 * Retrieves movie data from a remote server and passes it back to the client as a movie collection.
 	 * The movies contained in the movie collection correspond to the selected filter criteria.
 	 * @param filter Filter containing the selected filter criteria
 	 * @return MovieCollection A movie collection containing a filtered selection of movies
@@ -24,17 +24,16 @@ public interface FilmLoader extends RemoteService 	{
 	MovieCollection getRemoteMovieCollection(Filter filter);
 	
 	/** 
-	 * Returns the names of all countries, genres and languages so that the ListBoxes in the GUI can be populated appropriately.
+	 * Gets the names of all countries, genres and languages so that the ListBoxes in the GUI can be populated appropriately.
 	 * @param fileLocations ArrayList<String> that indicates where the film data files are located
 	 * @return ArrayList<TreeSet<String>> Contains the names of all countries, genres and languages
 	 */
 	ArrayList<TreeSet<String>> getListBoxItemNames(ArrayList<String> fileLocations);
 	
 	/** 
-	 * Retrieves the location of a CSV file containing all movies that correspond to the selected filter criteria
+	 * Retrieves the location of a remote CSV file containing all movies that correspond to the selected filter criteria
 	 * @param Filter containing the selected filter criteria
-	 * @return String containing the link to the CSV file
+	 * @return String containing the link to the remote CSV file
 	 */
 	String getExportCSVLink(Filter filter);
-	
 }

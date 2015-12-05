@@ -1,7 +1,7 @@
 package ch.uzh.sweng15.filmvisualizer.client;
 
 /** 
- * Enumeration of all film data visualizations
+ * Enumeration of all film data visualization types
  * 
  * @author 	Joel H.
  */
