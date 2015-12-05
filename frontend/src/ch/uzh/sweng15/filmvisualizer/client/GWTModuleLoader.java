@@ -128,6 +128,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 
 	/**
 	 * Populate TreeSet<String> data structures for later GUI use; then, build GUI
+	 * @param passedItemNames ArrayList<TreeSet<String>> containing information about the movie data set 
 	 */
 	private void populateTreeSets(ArrayList<TreeSet<String>> passedItemNames) {
 		countrySet = passedItemNames.get(0);
