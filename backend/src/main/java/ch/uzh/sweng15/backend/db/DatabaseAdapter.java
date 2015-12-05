@@ -30,6 +30,7 @@ import javafx.scene.chart.PieChart.Data;
 @Singleton
 public class DatabaseAdapter {
 
+	private static final int MAX_FETCH = 100000;
 	private static final String MOVIES_COLLECTION = "movies";
 	private static final String MOVIES_DATABASE = "sweng15";
 
@@ -208,7 +209,7 @@ public class DatabaseAdapter {
 			filterAsBson.append("length",yearFilter);
 		}
 		
-		MongoCursor<Document> cursor = collection.find(filterAsBson).limit(1000).iterator();
+		MongoCursor<Document> cursor = collection.find(filterAsBson).limit(MAX_FETCH).iterator();
 		return cursor;
 	}
 	
