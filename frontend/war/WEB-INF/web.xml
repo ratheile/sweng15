@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+              http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5" xmlns="http://java.sun.com/xml/ns/javaee">
+
+	<!-- Default page to serve -->
+	<welcome-file-list>
+		<welcome-file>FilmVisualizer.html</welcome-file>
+	</welcome-file-list>
+
+	<!-- Servlets -->
+	<servlet>
+		<servlet-name>FilmLoaderImpl</servlet-name>
+		<servlet-class>ch.uzh.sweng15.filmvisualizer.server.FilmLoaderImpl</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FilmLoaderImpl</servlet-name>
+		<url-pattern>/stockwatcher/filmData</url-pattern>
+	</servlet-mapping>
+
+</web-app>
