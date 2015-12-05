@@ -9,12 +9,16 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import ch.uzh.sweng15.backend.db.CSVExporter;
 import ch.uzh.sweng15.backend.db.DatabaseAdapter;
 import ch.uzh.sweng15.backend.db.DatabaseMovieImporter;
 import ch.uzh.sweng15.backend.pojo.Filter;
@@ -33,6 +37,9 @@ public class MovieVisualizerAPI {
 
 	@Inject
 	private DatabaseAdapter adapter;
+	
+	@Inject
+	private CSVExporter exporter;
 
 	/**
 	 * This constructor is called by the dependency injection system of the
@@ -128,11 +135,35 @@ public class MovieVisualizerAPI {
 	 * @return A JSON with a link to the csv document
 	 */
 	@POST
-	@Path("/movie/filtered/csv")
+	@Path("/movie/filtered/csvid")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String postRequestFilteredMoviesAsCSV(Filter filter) {
-		return adapter.getFilteredListOfMovies(filter);
+		
+		Document doc = new Document();
+		String id = exporter.generateCSV(filter);
+		doc.append("id", id);
+		
+		return doc.toJson();
 	}
-
+	
+	
+	/**
+	 * Returns the data from a csv id as OCTET_STREAM (HTTP)
+	 * @param id the id generated at postRequestFilteredMoviesAsCSV 
+	 * @return the Response so that the file is downloaded
+	 */
+	@GET
+	@Path("/csv/{id}")
+	public Response getCSVFromID(@PathParam("id") String id){
+		String csv = exporter.getCSV(id);
+		return Response
+                .ok(csv, MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition",
+                		String.format("attachment; filename = %s.txt", id))
+                .build();
+	}
+	
+	
+	
 }

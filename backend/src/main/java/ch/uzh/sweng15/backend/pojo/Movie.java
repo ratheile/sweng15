@@ -1,8 +1,7 @@
 package ch.uzh.sweng15.backend.pojo;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.Document;
 
@@ -14,6 +13,15 @@ import org.bson.Document;
  *
  */
 public class Movie {
+	
+	private static final String BSON_ID_YEAR = "year";
+	private static final String BSON_ID_LENGTH = "length";
+	private static final String BSON_ID_COUNTRY = "country";
+	private static final String BSON_ID_GENRE = "genre";
+	private static final String BSON_ID_LANGUAGE = "language";
+	private static final String BSON_ID_TITLE = "title";
+	
+	
 	
 	private String title;
 	private Integer year;
@@ -160,7 +168,8 @@ public class Movie {
 	
 	@Override
 	public String toString() {
-		return "Movie [title=" + title + ", year=" + year + ", length=" + length + ", country=" + country + ", genre="
+		return "Movie [title=" + title + ", year=" + year + 
+				", length=" + length + ", country=" + country + ", genre="
 				+ genre + ", language=" + language + "]";
 	}
 
@@ -169,12 +178,12 @@ public class Movie {
 	 * @return the BSON document, careful, returns a new instance everytimes!
 	 */
 	public Document getNewBSONRepresentation(){
-		Document document = new Document("title", this.getTitle())
-	               .append("language", this.getLanguage())
-	               .append("genre", this.getGenre())
-	               .append("country", this.getCountry())
-	               .append("length", this.getLength())
-	               .append("year", this.getYear());
+		Document document = new Document(BSON_ID_TITLE, this.getTitle())
+	               .append(BSON_ID_LANGUAGE, this.getLanguage())
+	               .append(BSON_ID_GENRE, this.getGenre())
+	               .append(BSON_ID_COUNTRY, this.getCountry())
+	               .append(BSON_ID_LENGTH, this.getLength())
+	               .append(BSON_ID_YEAR, this.getYear());
 		return document;
 	}
 	
@@ -186,9 +195,9 @@ public class Movie {
 	@SuppressWarnings("unchecked")
 	public boolean compareTo(Document bson){
 		
-		List<String> bsonLanguages = (List<String>) bson.get("language", List.class);
-		List<String> bsonGenres = (List<String>)bson.get("genre", List.class);
-		List<String> bsonCountries = (List<String>) bson.get("country", List.class);
+		List<String> bsonLanguages = (List<String>) bson.get(BSON_ID_LANGUAGE, List.class);
+		List<String> bsonGenres = (List<String>)bson.get(BSON_ID_GENRE, List.class);
+		List<String> bsonCountries = (List<String>) bson.get(BSON_ID_COUNTRY, List.class);
 		
 		if(bsonLanguages.size() != this.language.size())return false;
 		if(bsonGenres.size() != this.genre.size())return false;
@@ -206,13 +215,59 @@ public class Movie {
 			if(!this.country.contains(s)) return false;
 		}
 		
-		if(!bson.getString("title").equals(this.getTitle()))return false;	
-		if(bson.getInteger("length").intValue() != this.getLength())return false;
-		if(bson.getInteger("year").intValue() != this.getYear())return false;
+		if(!bson.getString(BSON_ID_TITLE).equals(this.getTitle()))return false;	
+		if(bson.getInteger(BSON_ID_LENGTH).intValue() != this.getLength())return false;
+		if(bson.getInteger(BSON_ID_YEAR).intValue() != this.getYear())return false;
 		return true;
 	}
 	
 	
+	/**
+	 * Generates a CSV String list from the movie BSON Document without an instance of Movie.
+	 * @param document the BSON document
+	 * @return ordered List of elements to be in the CSV
+	 */
+	public static List<String> documentToCSV(Document bson){
+		
+		String innerSeparator = "#";
+		
+		List<String> csvStrings = new ArrayList<>();
+		
+		List<String> bsonLanguages = (List<String>) bson.get(BSON_ID_LANGUAGE, List.class);
+		List<String> bsonGenres = (List<String>)bson.get(BSON_ID_GENRE, List.class);
+		List<String> bsonCountries = (List<String>) bson.get(BSON_ID_COUNTRY, List.class);
+		
+		String title = bson.getString(BSON_ID_TITLE);
+		Integer length = bson.getInteger(BSON_ID_LENGTH);
+		Integer year = bson.getInteger(BSON_ID_YEAR);
+		
+		csvStrings.add(title);
+		csvStrings.add(String.valueOf(length));
+		csvStrings.add(String.valueOf(year));
+		
+		//Nice Java8 method, does not work on server :(
+		//csvStrings.add(bsonLanguages.stream().collect(Collectors.joining(innerSeparator)));
+		//csvStrings.add(bsonGenres.stream().collect(Collectors.joining(innerSeparator)));
+		//csvStrings.add(bsonCountries.stream().collect(Collectors.joining(innerSeparator)));
+		
+		
+		//fallback to java 7
+		csvStrings.add(arrayJoinToString(innerSeparator, bsonLanguages));
+		csvStrings.add(arrayJoinToString(innerSeparator, bsonGenres));
+		csvStrings.add(arrayJoinToString(innerSeparator, bsonCountries));
+		
+		return csvStrings;
+	}
+
+	private static String arrayJoinToString(String separator, List<String> list) {
+		StringBuilder string = new StringBuilder();
+		for(String s : list){
+			string.append(s);
+			string.append(separator);
+		}
+		//remove last inner separator or return "" when empty
+		return ((string.length()>0)?string.substring(0, string.length() - 1).toString():"");
+	}
 	
 	
 }

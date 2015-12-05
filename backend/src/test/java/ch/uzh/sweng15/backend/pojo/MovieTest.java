@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.bson.Document;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,21 +15,6 @@ import org.junit.Test;
 
 public class MovieTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	/*
 	 * W are testing if every atomic compare is working inside the testCompare function
@@ -82,5 +69,33 @@ public class MovieTest {
 		assertEquals(true,compare);
 	}
 	
+	
+	
+	/*
+	 * Test if the csv string generated from a movie is ok
+	 */
+	@Test
+	public void testCSVStringArray(){
+		ArrayList<String> genres = new ArrayList<>();
+		ArrayList<String> languages = new ArrayList<>();
+		ArrayList<String> countries = new ArrayList<>();
+		
+		genres.addAll(Arrays.asList("genrestest1", "genrestest2", "genrestest3"));
+		languages.addAll(Arrays.asList("languagestest1", "languagestest2", "languagestest3"));
+		countries.addAll(Arrays.asList("countriestest1", "countriestest2", "countriestest3"));
+		
+		Movie movie = new Movie("testmovie", 1922, 1000, genres, languages,countries);
+		
+		
+		Document newBSONRepresentation = movie.getNewBSONRepresentation();
+		
+		List<String> stringlist = Movie.documentToCSV(newBSONRepresentation);
+		
+		assertEquals("[testmovie, 1000, 1922, countriestest1#countriestest2#countriestest3, "
+				+ "languagestest1#languagestest2#languagestest3, genrestest1#genrestest2#genrestest3]", stringlist.toString());
+		
+		
+		
+	}
 
 }

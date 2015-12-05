@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 
+import ch.uzh.sweng15.backend.db.CSVExporter;
 import ch.uzh.sweng15.backend.db.DatabaseAdapter;
 
 /**
@@ -27,9 +28,15 @@ private class ApplicationBinder extends AbstractBinder {
     	//api endpoints have to be defined:
         bind(MovieVisualizerAPI.class).to(MovieVisualizerAPI.class);
         
-        //services have to be defined, this is our database.
+        //services have to be defined
         //we want this to be a singleton instance (otherwise it will leak resources)
+        
+        //this is our database.
         bind(DatabaseAdapter.class).to(DatabaseAdapter.class).in(Singleton.class);
+        
+        //exporter
+        bind(CSVExporter.class).to(CSVExporter.class).in(Singleton.class);
+        
     }
 }
 
