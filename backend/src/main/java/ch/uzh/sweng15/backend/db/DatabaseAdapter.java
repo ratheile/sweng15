@@ -30,7 +30,7 @@ import javafx.scene.chart.PieChart.Data;
 @Singleton
 public class DatabaseAdapter {
 
-	private static final int MAX_FETCH = 100000;
+	private static final int MAX_FETCH = 1000;
 	private static final String MOVIES_COLLECTION = "movies";
 	private static final String MOVIES_DATABASE = "sweng15";
 
