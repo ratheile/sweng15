@@ -54,7 +54,7 @@ public class GWTModuleLoader implements EntryPoint, SliderListener {
 	private boolean isAdvertised = false;
 	private boolean isLoading = false;
 	private boolean dataIsUpToDate = false;
-	final int bottomWidgetIndex = 4;
+	private final int bottomWidgetIndex = 4;
 	private FilmLoaderAsync filmLoaderSvc = GWT.create(FilmLoader.class);
 	
 	
